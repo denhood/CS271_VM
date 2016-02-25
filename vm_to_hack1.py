@@ -1,3 +1,5 @@
+labelCount = 0 #need this global variable to handle address labels in eq
+
 def open_file(fileName):
     fileObj = open(fileName,'w')
     return fileObj
@@ -6,11 +8,12 @@ def write_to_file(string, fileObj):
     fileObj.write(string)
     return
 
-def close_file(fileName):
+def close_file(fileName): #create an infinite assembly loop and close file
     fileName.write("\n(END)\n@END\n0;JMP")
     fileName.close()
     return
-def setup(fileName):
+
+def setup(fileName): #setup puts starting address of stack in SP
     fileName.write("@256\n"+\
                    "D=A\n"+\
                    "@SP\n"+\
@@ -132,18 +135,20 @@ def neg():
     string = string + "\n@SP\nM=M+1"
     return string
 
-def eq(count):#NEED TO HAVE AN INCREMENTING VARIABLE AND CONCATENATE WITH ADDRESS LABELS (AROUND_1)...
+def eq():
+    global labelCount #father, forgive me for I have sinned
+    labelCount += 1#NEED TO HAVE AN INCREMENTING VARIABLE AND CONCATENATE WITH ADDRESS LABELS ex:(AROUND1)
     string = ""
     #load last two values off stack into D and A registers
     string = "\n@SP\nM=M-1\nA=M\nD=M\n@SP\nM=M-1\nA=M\nA=M"
     #subtract the two registers, if D=A then D-A=0
     string = string + "\nD=D-A"
     #check to see if this is zero if it is, jump to (AROUND), else set memory to FALSE
-    string = string + "\n@AROUND"+str(count)+"\nD;JEQ\n@SP\nA=M\nM=0\n@END_COMP"+str(count)+"\n0;JMP"
+    string = string + "\n@AROUND"+str(labelCount)+"\nD;JEQ\n@SP\nA=M\nM=0\n@END_COMP"+str(labelCount)+"\n0;JMP"
     #set value in memory to TRUE
-    string = string + "\n(AROUND"+str(count)+")\n@SP\nA=M\nM=-1"
+    string = string + "\n(AROUND"+str(labelCount)+")\n@SP\nA=M\nM=-1"
     #after setting memory to TRUE or FALSE, JUMP here to increment SP
-    string = string + "\n(END_COMP"+str(count)+")\n@SP\nM=M+1"
+    string = string + "\n(END_COMP"+str(labelCount)+")\n@SP\nM=M+1"
     return string
 
 def gt():
@@ -161,7 +166,7 @@ def Or():
 def Not():
     pass
 
-def VM_command_to_HACK(instruction,file,count):
+def VM_command_to_HACK(instruction,file):
     templst = instruction.split()
     if templst[0] == 'push':
         write_to_file(push(templst[1],templst[2]),file)
@@ -172,7 +177,7 @@ def VM_command_to_HACK(instruction,file,count):
     elif templst[0] == 'neg':
         write_to_file(neg(),file)
     elif templst[0] == 'eq':
-        write_to_file(eq(count),file)
+        write_to_file(eq(),file)
     elif templst[0] == 'gt':
         write_to_file(gt(),file)
     elif templst[0] == 'lt':
@@ -189,16 +194,16 @@ def VM_command_to_HACK(instruction,file,count):
 def main():
     fptr = open_file("vmout.asm")
     setup(fptr) #setup address of stack
-    VM_command_to_HACK("push constant 123",fptr,0)
-    VM_command_to_HACK("push constant 456",fptr,0)
-    VM_command_to_HACK("add",fptr,0)
-    VM_command_to_HACK("push constant 421",fptr,0)
-    VM_command_to_HACK("sub",fptr,0)
-    VM_command_to_HACK("neg",fptr,0)
-    VM_command_to_HACK("push constant 421",fptr,0)
-    VM_command_to_HACK("eq",fptr,1)
-    VM_command_to_HACK("push constant 3",fptr,0)
-    VM_command_to_HACK("push constant 3",fptr,0)
-    VM_command_to_HACK("eq",fptr,2)
+    VM_command_to_HACK("push constant 123",fptr)
+    VM_command_to_HACK("push constant 456",fptr)
+    VM_command_to_HACK("add",fptr)
+    VM_command_to_HACK("push constant 421",fptr)
+    VM_command_to_HACK("sub",fptr)
+    VM_command_to_HACK("neg",fptr)
+    VM_command_to_HACK("push constant 421",fptr)
+    VM_command_to_HACK("eq",fptr)
+    VM_command_to_HACK("push constant 3",fptr)
+    VM_command_to_HACK("push constant 3",fptr)
+    VM_command_to_HACK("eq",fptr)
     close_file(fptr)
     print("file written")
