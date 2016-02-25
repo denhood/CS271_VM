@@ -12,11 +12,10 @@ M=D  //put 5 in RAM[256]
 @SP
 M=M+1 //increment stackpointer
 
-//----ANOTHER PUSH----------------//
-@5   //value to be pushed on stack(arbitrary)
-D=A  //D=5
-@SP  //load RAM[0]
-A=M  //put value at RAM[0] in A register
-M=D  //put 5 in RAM[256]
+//----neg-------------------------//
 @SP
-M=M+1 //increment stackpointer
+M=M-1
+A=M
+M=-M
+@SP
+M=M+1
