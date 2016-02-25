@@ -136,35 +136,94 @@ def neg():
     return string
 
 def eq():
-    global labelCount #father, forgive me for I have sinned
+    global labelCount #forgive me Batman for I have sinned
     labelCount += 1#NEED TO HAVE AN INCREMENTING VARIABLE AND CONCATENATE WITH ADDRESS LABELS ex:(AROUND1)
     string = ""
     #load last two values off stack into D and A registers
     string = "\n@SP\nM=M-1\nA=M\nD=M\n@SP\nM=M-1\nA=M\nA=M"
     #subtract the two registers, if D=A then D-A=0
     string = string + "\nD=D-A"
-    #check to see if this is zero if it is, jump to (AROUND), else set memory to FALSE
+    #check to see if this is zero if it is, jump to (AROUND), else set memory to FALSE (0)
     string = string + "\n@AROUND"+str(labelCount)+"\nD;JEQ\n@SP\nA=M\nM=0\n@END_COMP"+str(labelCount)+"\n0;JMP"
-    #set value in memory to TRUE
+    #set value in memory to TRUE (-1)
     string = string + "\n(AROUND"+str(labelCount)+")\n@SP\nA=M\nM=-1"
     #after setting memory to TRUE or FALSE, JUMP here to increment SP
     string = string + "\n(END_COMP"+str(labelCount)+")\n@SP\nM=M+1"
     return string
 
 def gt():
-    pass
+    global labelCount #forgive me Batman for I have sinned
+    labelCount += 1#NEED TO HAVE AN INCREMENTING VARIABLE AND CONCATENATE WITH ADDRESS LABELS ex:(AROUND1)
+    string = ""
+    #load last value of stack in D register
+    string = "\n@SP\nM=M-1\nA=M\nD=M"
+    #load second to last value in A register
+    string = string + "\n@SP\nM=M-1\nA=M\nA=M"
+    #if A>D then A-D must be positive
+    string = string + "\nD=A-D"
+    #if A-D is NOT greater than 0, return FALSE (0)
+    string = string + "\n@AROUND"+str(labelCount)+"\nD;JGT\n@SP\nA=M\nM=0\n@END_COMP"+str(labelCount)+"\n0;JMP"
+    #if A-D is positive, return TRUE (-1)
+    string = string + "\n(AROUND"+str(labelCount)+")\n@SP\nA=M\nM=-1"
+    #increment SP
+    string = string + "\n(END_COMP"+str(labelCount)+")\n@SP\nM=M+1"
+    return string
 
 def lt():
-    pass
+    global labelCount #forgive me Batman for I have sinned
+    labelCount += 1#NEED TO HAVE AN INCREMENTING VARIABLE AND CONCATENATE WITH ADDRESS LABELS ex:(AROUND1)
+    string = ""
+    #load last value of stack in D register
+    string = "\n@SP\nM=M-1\nA=M\nD=M"
+    #load second to last value in A register
+    string = string + "\n@SP\nM=M-1\nA=M\nA=M"
+    #if A<D then A-D must be negative
+    string = string + "\nD=A-D"
+    #if A-D is NOT less than 0, return FALSE (0)
+    string = string + "\n@AROUND"+str(labelCount)+"\nD;JLT\n@SP\nA=M\nM=0\n@END_COMP"+str(labelCount)+"\n0;JMP"
+    #if A-D is negative, return TRUE (-1)
+    string = string + "\n(AROUND"+str(labelCount)+")\n@SP\nA=M\nM=-1"
+    #increment SP
+    string = string + "\n(END_COMP"+str(labelCount)+")\n@SP\nM=M+1"
+    return string
 
 def And():
-    pass
+    string = ""
+    #load last value of stack in D register
+    string = "\n@SP\nM=M-1\nA=M\nD=M"
+    #load next to last value of stack in A register
+    string = string+"\n@SP\nM=M-1\nA=M\nA=M"
+    #store result of D&A in D register
+    string = string+"\nD=D&A"
+    #load last address of SP and put TRUE or FALSE there
+    string = string+"\n@SP\nA=M\nM=D"
+    #increment SP
+    string = string+"\n@SP\nM=M+1"
+    return string
 
 def Or():
-    pass
+    string = ""
+    #load last value of stack in D register
+    string = "\n@SP\nM=M-1\nA=M\nD=M"
+    #load next to last value of stack in A register
+    string = string+"\n@SP\nM=M-1\nA=M\nA=M"
+    #store result of D&A in D register
+    string = string+"\nD=D|A"
+    #load last address of SP and put TRUE or FALSE there
+    string = string+"\n@SP\nA=M\nM=D"
+    #increment SP
+    string = string+"\n@SP\nM=M+1"
+    return string
 
 def Not():
-    pass
+    string = ""
+    #load last value of stack in D register
+    string = "\n@SP\nM=M-1\nA=M\nD=M"
+    string = string + "\nD=!M"
+    string = string + "\nM=D\n"
+    #increment SP
+    string = string+"\n@SP\nM=M+1"
+    return string
 
 def VM_command_to_HACK(instruction,file):
     templst = instruction.split()
@@ -194,16 +253,42 @@ def VM_command_to_HACK(instruction,file):
 def main():
     fptr = open_file("vmout.asm")
     setup(fptr) #setup address of stack
+    '''
+    #add
     VM_command_to_HACK("push constant 123",fptr)
     VM_command_to_HACK("push constant 456",fptr)
     VM_command_to_HACK("add",fptr)
+    #sub
     VM_command_to_HACK("push constant 421",fptr)
     VM_command_to_HACK("sub",fptr)
+    #neg
     VM_command_to_HACK("neg",fptr)
+    #test for equality (false)
     VM_command_to_HACK("push constant 421",fptr)
     VM_command_to_HACK("eq",fptr)
+    #test for equality (true)
     VM_command_to_HACK("push constant 3",fptr)
     VM_command_to_HACK("push constant 3",fptr)
     VM_command_to_HACK("eq",fptr)
+    #AND
+    VM_command_to_HACK("push constant 21",fptr) #21 = 10101B
+    VM_command_to_HACK("push constant 10",fptr) #10 = 01010B
+    VM_command_to_HACK("and",fptr) #21&10 = 0
+    #OR
+    VM_command_to_HACK("push constant 21",fptr) #21 = 10101B
+    VM_command_to_HACK("push constant 10",fptr) #10 = 01010B
+    VM_command_to_HACK("or",fptr) #21|10 = 31
+    #NOT
+    VM_command_to_HACK("push constant 341",fptr) #341 = 101010101B
+    VM_command_to_HACK("not",fptr) #!341 = -342
+    '''
+    #lt 8!<7 return FALSE
+    VM_command_to_HACK("push constant 8",fptr)
+    VM_command_to_HACK("push constant 7",fptr)
+    VM_command_to_HACK("lt",fptr)
+    #gt 8>7 return TRUE
+    VM_command_to_HACK("push constant 8",fptr)
+    VM_command_to_HACK("push constant 7",fptr)
+    VM_command_to_HACK("gt",fptr)
     close_file(fptr)
     print("file written")
