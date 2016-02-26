@@ -43,8 +43,11 @@ def push(memSeg, offset): #NOTE: only complete segment is constant
                '\nM=M+1')
     elif memSeg == 'static': #base address IS RAM[16]
         #get the value at static
-        return('\n@'+offset+\
-               '\nD=A'+\
+        return('\n@16'+\
+               '\nD=M'+\
+               '\n@'+offset+\
+               '\nA=D+A'+\
+               '\nD=M'+\
                '\n@SP'+\
                '\nA=M'+\
                '\nM=D'+\
