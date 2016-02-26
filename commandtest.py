@@ -1,3 +1,8 @@
+################################################################################
+#                        MEMORY SEGMENT ALERT!                                 #
+# This module only uses the constant memory segment to write directly to stack #
+################################################################################
+
 import vm_to_hack1 as VM
 
 def test():
