@@ -108,9 +108,12 @@ def push(memSeg, offset): #NOTE: only complete segment is constant
                '\n@SP'+\
                '\nM=M+1')
     elif memSeg == 'temp': #Hold the contents of temp segment in RAM[5]
-        #get the value of LCL
-        return('\n@'+offset+\
-               '\nD=A'+\
+        #get the value of temp
+        return('\n@R5'+\
+               '\nD=M'+\
+               '\n@'+offset+\
+               '\nA=D+A'+\
+               '\nD=M'+\
                '\n@SP'+\
                '\nA=M'+\
                '\nM=D'+\
