@@ -1,0 +1,27 @@
+segment  |start
+_______________
+      sp |256
+   local |300
+argument |400
+    this |3000
+    that |3010
+
+
+
+
+RAM  0|SP
+RAM  1|LCL
+RAM  2|ARGS
+RAM  3|THIS
+RAM  4|THAT
+RAM  5|Temp
+RAM  6|Temp
+RAM  7|Temp
+RAM  8|Temp
+RAM  9|Temp
+RAM 10|Temp
+RAM 11|Temp
+RAM 12|Temp
+RAM 13|General Purpose
+RAM 14|General Purpose
+RAM 15|General Purpose
