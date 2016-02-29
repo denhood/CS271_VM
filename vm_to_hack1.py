@@ -22,15 +22,19 @@ def close_file(fileName): #create an infinite assembly loop and close file
     fileName.close()
     return
 
-def setup(fileName): #setup puts starting address of stack in SP
+def setup(fileName): #setup puts starting address of stack in SP, and address of ARG, LCL, 
     fileName.write("@256\n"+\
                    "D=A\n"+\
                    "@SP\n"+\
-                   "M=D\n"+\
-                   "@300\n"+\
-                   "D=M\n"+\
-                   "@LCL\n"+\
-                   "M=D\n")
+                   "M=D\n"+
+                   "@300\n"+
+                   "D=A\n"+
+                   "@LCL\n"+
+                   "M=D\n"+
+                   "@400\n"+
+                   "D=A\n"+
+                   ""+
+                   ""+)
     return
     
 def push(memSeg, offset): #NOTE: only complete segment is constant
@@ -109,26 +113,8 @@ def push(memSeg, offset): #NOTE: only complete segment is constant
     else:
         return ('seg not found')
 
-def pop(memSeg, offset):
-    if memSeg == 'constant':
-        return('\n@SP'+\
-               'M=M-1')
-    elif memSeg == 'static':
-        return('\n@SP'+\
-               '\nM=M-1'+\
-               '\n@'+memSeg+\
-               '\nD=M'+\
-               '\n@'+str(offset)+\
-               '\nD=A+D'+\
-               '\n@R15'+\
-               '\nM=D'+\
-               '\n@SP'+\
-               '\nD=M'+\
-               '\n@R15'+\
-               '\nA=M'+\
-               '\nM=D')
-               
-    
+def pop():
+    pass
 
 def add():
     #add the last two values on the stack
@@ -360,8 +346,6 @@ def VM_command_to_HACK(instruction,file):
     templst = instruction.split()
     if templst[0] == 'push':
         write_to_file(push(templst[1],templst[2]),file)
-    elif templst[0] == 'pop':
-        write_to_file(pop(templst[1],templst[2]),file) 
     elif templst[0] == 'add':
         write_to_file(add(),file)
     elif templst[0] == 'sub':
@@ -387,6 +371,5 @@ def main():
     fptr = open_file("vmout.asm")
     setup(fptr) #setup address of stack
     #parse file
-    VM_command_to_HACK('pop local 3', fptr)
     close_file(fptr)
     print("file written")
