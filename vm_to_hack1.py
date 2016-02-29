@@ -1,3 +1,9 @@
+"""
+Title: VM_to_HACK1
+Authors: Denny Hood, Harold Smith, Bradley Thompson
+Class: CS 271
+Description:The main program of the virtual machine.
+"""
 ################################################################################
 #                        GLOBAL VARIABLE ALERT!                                #
 labelCount = 0 #need this global variable to handle address labels in eq
