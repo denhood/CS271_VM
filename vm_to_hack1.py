@@ -1,9 +1,3 @@
-"""
-Title: VM_to_HACK1
-Authors: Denny Hood, Harold Smith, Bradley Thompson
-Class: CS 271
-Description:The main program of the virtual machine.
-"""
 ################################################################################
 #                        GLOBAL VARIABLE ALERT!                                #
 labelCount = 0 #need this global variable to handle address labels in eq
@@ -28,8 +22,12 @@ def setup(fileName): #setup puts starting address of stack in SP
                    "@SP\n"+\
                    "M=D\n"+\
                    "@300\n"+\
-                   "D=M\n"+\
+                   "D=A\n"+\
                    "@LCL\n"+\
+                   "M=D\n"+\
+                   "@16\n"+\
+                   "D=A\n"+\
+                   "@static\n"+\
                    "M=D\n")
     return
     
@@ -110,10 +108,11 @@ def push(memSeg, offset): #NOTE: only complete segment is constant
         return ('seg not found')
 
 def pop(memSeg, offset):
+    memorySeg = ['static', 'that', 'this', 'argument', 'local', 'pointer', 'temp']
     if memSeg == 'constant':
         return('\n@SP'+\
-               'M=M-1')
-    elif memSeg == 'static':
+               '\nM=M-1')
+    elif memSeg in memorySeg:
         return('\n@SP'+\
                '\nM=M-1'+\
                '\n@'+memSeg+\
@@ -123,10 +122,13 @@ def pop(memSeg, offset):
                '\n@R15'+\
                '\nM=D'+\
                '\n@SP'+\
+               '\nA=M'+\
                '\nD=M'+\
                '\n@R15'+\
                '\nA=M'+\
                '\nM=D')
+    else:
+        return 'Non-valid memory segment'
                
     
 
@@ -387,6 +389,7 @@ def main():
     fptr = open_file("vmout.asm")
     setup(fptr) #setup address of stack
     #parse file
-    VM_command_to_HACK('pop local 3', fptr)
+    VM_command_to_HACK('push constant 83', fptr)
+    VM_command_to_HACK('pop static 3', fptr)
     close_file(fptr)
     print("file written")
