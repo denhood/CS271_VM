@@ -1,0 +1,2 @@
+I say we use this document to put our ideas whenever we have them on what to add/change/remove in the code.  Think of it as the world's
+worst chat client.  
