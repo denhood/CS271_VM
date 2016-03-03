@@ -1,11 +1,37 @@
+"""
+Title: vm_to_hack1
+Author: Harold Smith, Denny Hood, Brad Thompson
+Class: CS 271
+Description: This program will translate commands for memory allocation and
+             perform arithmetic operations of add, subtract and negate. Also,
+             the translator can perform boolean logic such as AND, OR, NOT. The
+             output file will be stored as the input file with a .HACK extension.
+"""
 ################################################################################
 #                        GLOBAL VARIABLE ALERT!                                #
 labelCount = 0 #need this global variable to handle address labels in eq
 ################################################################################
 
-def open_file(fileName):
-    fileObj = open(fileName,'w')
-    return fileObj
+def open_file():
+    fileName = input("filename: ")
+    fileInList = fileName.split(".",2)
+    if fileInList[1] == 'vm':
+        try:
+            filePtr = open(fileName,"r") #we don't want to modify .vm file
+            return filePtr
+        except IOError:
+            print ("Error: ",fileName," does not exist.")
+            return -1
+    elif fileInList[1] == "asm":
+        try:
+            filePtr = open(fileName,"w") #we want to modify .asm file
+            return filePtr
+        except IOError:
+            print ("Error: ",fileName," could not be created.")
+            return -1
+    else:
+        print("Error: ",fileName," does not appear to be a valid file name.")
+        return -2
     
 def write_to_file(string, fileObj):
     fileObj.write(string)
@@ -386,12 +412,26 @@ def VM_command_to_HACK(instruction,file):
         write_to_file(Not(),file)
     else:
         print("command not found")
+    return
+
+def parse_command(fileIn):
+    command_list = []
+    for line in fileIn:
+        line = line.strip()
+        if line != "": #make sure line is not empty
+            if line[0] != '/': #make sure line is not a comment
+                command_list.append(line)    
+    return command_list
 
 def main():
-    fptr = open_file("vmout.asm")
-    setup(fptr) #setup address of stack
-    #parse file
-    VM_command_to_HACK('push constant 83', fptr)
-    VM_command_to_HACK('pop static 3', fptr)
-    close_file(fptr)
+    print("Input ",end="")
+    inputfptr = open_file()
+    commandList = parse_command(inputfptr)#parse file
+    inputfptr.close()
+    print("Output ",end="")
+    outputfptr = open_file()
+    setup(outputfptr) #setup addresses of stack, LCL, ARGS, THIS, THAT
+    for line in commandList:
+        VM_command_to_HACK(line,outputfptr)
+    close_file(outputfptr)
     print("file written")
