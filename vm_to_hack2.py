@@ -69,7 +69,9 @@ def push(memSeg, offset): #NOTE: only complete segment is constant
                '\nM=M+1')
     elif memSeg == 'static': #base address IS RAM[16]
         #get the value at static
-        return('\n@static'+\
+        return('\n@'+str(offset)+\
+               '\nD=A'+\
+               '\n@static'+\
                '\nA=A+D'+\
                '\nD=M'+\
                '\n@SP'+\
@@ -78,7 +80,9 @@ def push(memSeg, offset): #NOTE: only complete segment is constant
                '\nM=M+1')
     elif memSeg == 'that': #base address of area in heap stored in RAM[4]
         #get the value at THAT
-        return('\n@THAT'+\
+        return('\n@'+str(offset)+\
+               '\nD=A'+\
+               '\n@THAT'+\
                '\nA=A+D'+\
                '\nD=M'+\
                '\n@SP'+\
@@ -87,7 +91,9 @@ def push(memSeg, offset): #NOTE: only complete segment is constant
                '\nM=M+1')
     elif memSeg == 'this': #base address of area in heap stored in RAM[3]
         #get the value at THIS
-        return('\n@THIS'+\
+        return('\n@'+str(offset)+\
+               '\nD=A'+\
+               '\n@THIS'+\
                '\nA=A+D'+\
                '\nD=M'+\
                '\n@SP'+\
@@ -96,7 +102,9 @@ def push(memSeg, offset): #NOTE: only complete segment is constant
                '\nM=M+1')
     elif memSeg == 'argument': #base address of area in heap stored in RAM[2]
         #get the value at ARG
-        return('\n@ARG'+\
+        return('\n@'+str(offset)+\
+               '\nD=A'+\
+               '\n@ARG'+\
                '\nA=A+D'+\
                '\nD=M'+\
                '\n@SP'+\
@@ -105,7 +113,9 @@ def push(memSeg, offset): #NOTE: only complete segment is constant
                '\nM=M+1')
     elif memSeg == 'local': #base address of area in heap stored in RAM[1]
         #get the value of LCL
-        return('\n@LCL'+\
+        return('\n@'+str(offset)+\
+               '\nD=A'+\
+               '\n@LCL'+\
                '\nA=A+D'+\
                '\nD=M'+\
                '\n@SP'+\
