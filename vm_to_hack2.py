@@ -69,46 +69,46 @@ def push(memSeg, offset): #NOTE: only complete segment is constant
                '\nM=M+1')
     elif memSeg == 'static': #base address IS RAM[16]
         #get the value at static
-        return('\n@'+offset+\
-               '\nD=A'+\
+        return('\n@static'+\
+               '\nA=A+D'+\
+               '\nD=M'+\
                '\n@SP'+\
-               '\nA=M'+\
                '\nM=D'+\
                '\n@SP'+\
                '\nM=M+1')
     elif memSeg == 'that': #base address of area in heap stored in RAM[4]
         #get the value at THAT
-        return('\n@'+offset+\
-               '\nD=A'+\
+        return('\n@THAT'+\
+               '\nA=A+D'+\
+               '\nD=M'+\
                '\n@SP'+\
-               '\nA=M'+\
                '\nM=D'+\
                '\n@SP'+\
                '\nM=M+1')
     elif memSeg == 'this': #base address of area in heap stored in RAM[3]
         #get the value at THIS
-        return('\n@'+offset+\
-               '\nD=A'+\
+        return('\n@THIS'+\
+               '\nA=A+D'+\
+               '\nD=M'+\
                '\n@SP'+\
-               '\nA=M'+\
                '\nM=D'+\
                '\n@SP'+\
                '\nM=M+1')
     elif memSeg == 'argument': #base address of area in heap stored in RAM[2]
         #get the value at ARG
-        return('\n@'+offset+\
-               '\nD=A'+\
+        return('\n@ARG'+\
+               '\nA=A+D'+\
+               '\nD=M'+\
                '\n@SP'+\
-               '\nA=M'+\
                '\nM=D'+\
                '\n@SP'+\
                '\nM=M+1')
     elif memSeg == 'local': #base address of area in heap stored in RAM[1]
         #get the value of LCL
-        return('\n@'+offset+\
-               '\nD=A'+\
+        return('\n@LCL'+\
+               '\nA=A+D'+\
+               '\nD=M'+\
                '\n@SP'+\
-               '\nA=M'+\
                '\nM=D'+\
                '\n@SP'+\
                '\nM=M+1')
